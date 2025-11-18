@@ -1,35 +1,92 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# TaskMan - Task Management Application
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+A modern Task Management application built with **Kotlin Multiplatform Mobile (KMM)** featuring shared business logic and native Android UI with offline-first architecture.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Download the APK: [Releases](https://github.com/aaditx23/TaskMan/releases)
 
-### Build and Run Android Application
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+## Features
 
-### Build and Run iOS Application
+### Core Functionality
+- ✅ **Create, Read, Update, Delete** tasks
+- 📝 **Task Properties:**
+  - Title (required)
+  - Description (optional)
+  - Priority: Low, Medium, High
+  - Status: To Do, In Progress, Done
+  - Due date (optional)
+  - Created timestamp
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+### User Experience
+- 🔍 **Search** tasks by title
+- 🎯 **Filter** by status and priority
+- 📊 **Sort** by date, priority, status, or title
+- 💾 **Offline support** with local data persistence
+- 🌓 **Dark/Light theme** support
+- 📱 **Clean Material Design 3 UI**
 
----
+## Screenshots
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+### Task List & Management
+
+| List View | Empty State | Create Task |
+|-----------|-------------|-------------|
+| ![List](screenshots/list.png) | ![Empty](screenshots/empty.png) | ![Create](screenshots/create.png) |
+
+### Task Details & Editing
+
+| Task Details | Edit Task |
+|--------------|-----------|
+| ![Details](screenshots/details.png) | ![Edit](screenshots/edit.png) |
+
+### Search, Filter & Sort
+
+| Search | Filter | Sort |
+|--------|--------|------|
+| ![Search](screenshots/search.png) | ![Filter](screenshots/filter.png) | ![Sort](screenshots/sort.png) |
+
+### Delete Operations
+
+| Delete from List | Delete from Details |
+|------------------|---------------------|
+| ![Delete List](screenshots/deletefromlist.png) | ![Delete Details](screenshots/deletefromdetails.png) |
+
+## Tech Stack
+
+- **Kotlin Multiplatform Mobile (KMM)** - Shared business logic
+- **Jetpack Compose** - Modern declarative UI
+- **Room Database** - Local data persistence
+- **Voyager** - Navigation library
+- **Material Design 3** - UI components
+## Architecture
+
+The app follows a clean architecture pattern with:
+- **Domain Layer:** Task models and business logic (shared)
+- **Data Layer:** Repository pattern with Room database
+- **Presentation Layer:** MVVM with ScreenModels and Compose UI
+
+
+
+## Build and Run
+
+### Prerequisites
+- Android Studio
+- JDK 17 or later
+- Android SDK
+
+### Build Android App
+
+```bash
+# On macOS/Linux
+./gradlew :composeApp:assembleDebug
+
+# On Windows
+.\gradlew.bat :composeApp:assembleDebug
+```
+
+### Run on Device/Emulator
+Open the project in Android Studio and click **Run** or use:
+```bash
+./gradlew :composeApp:installDebug
+```
+
