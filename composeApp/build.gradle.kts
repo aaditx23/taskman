@@ -43,7 +43,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
-            // Room dependencies
+            // DataStore for preferences
+            implementation("androidx.datastore:datastore-preferences:1.1.7")
+
 
 
         }

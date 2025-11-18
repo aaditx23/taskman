@@ -1,4 +1,4 @@
-package org.aaditx23.taskman.presentation.taskdetail
+package org.aaditx23.taskman.presentation.screens.taskdetail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

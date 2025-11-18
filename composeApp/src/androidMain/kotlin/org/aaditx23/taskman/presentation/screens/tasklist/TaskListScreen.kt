@@ -1,4 +1,4 @@
-package org.aaditx23.taskman.presentation.tasklist
+package org.aaditx23.taskman.presentation.screens.tasklist
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,9 +13,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.aaditx23.taskman.AppDependencies
 import org.aaditx23.taskman.presentation.components.*
-import org.aaditx23.taskman.presentation.createtask.CreateTaskScreen
-import org.aaditx23.taskman.presentation.taskdetail.TaskDetailScreen
+import org.aaditx23.taskman.presentation.screens.createtask.CreateTaskScreen
+import org.aaditx23.taskman.presentation.screens.taskdetail.TaskDetailScreen
 
 class TaskListScreen : Screen {
     @Composable
@@ -27,6 +28,9 @@ class TaskListScreen : Screen {
         var showFilterSheet by remember { mutableStateOf(false) }
         var showSortSheet by remember { mutableStateOf(false) }
 
+        val isDarkMode = AppDependencies.isDarkMode?.value ?: false
+        val onToggleTheme = AppDependencies.onToggleTheme ?: {}
+
         Scaffold(
             topBar = {
                 TaskListTopBar(
@@ -34,7 +38,9 @@ class TaskListScreen : Screen {
                     onSearchQueryChange = { screenModel.onSearchQueryChange(it) },
                     onFilterClick = { showFilterSheet = true },
                     onSortClick = { showSortSheet = true },
-                    hasActiveFilters = state.selectedStatus != null || state.selectedPriority != null
+                    hasActiveFilters = state.selectedStatus != null || state.selectedPriority != null,
+                    isDarkMode = isDarkMode,
+                    onToggleTheme = onToggleTheme
                 )
             },
             floatingActionButton = {

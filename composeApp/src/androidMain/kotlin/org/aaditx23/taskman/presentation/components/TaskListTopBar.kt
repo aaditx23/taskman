@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,7 +19,9 @@ fun TaskListTopBar(
     onSearchQueryChange: (String) -> Unit,
     onFilterClick: () -> Unit,
     onSortClick: () -> Unit,
-    hasActiveFilters: Boolean
+    hasActiveFilters: Boolean,
+    isDarkMode: Boolean = false,
+    onToggleTheme: () -> Unit = {}
 ) {
     var isSearchActive by remember { mutableStateOf(false) }
 
@@ -51,6 +55,12 @@ fun TaskListTopBar(
                 Icon(
                     if (isSearchActive) Icons.Default.Close else Icons.Default.Search,
                     contentDescription = if (isSearchActive) "Close search" else "Search"
+                )
+            }
+            IconButton(onClick = onToggleTheme) {
+                Icon(
+                    if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    contentDescription = if (isDarkMode) "Switch to light mode" else "Switch to dark mode"
                 )
             }
             BadgedBox(

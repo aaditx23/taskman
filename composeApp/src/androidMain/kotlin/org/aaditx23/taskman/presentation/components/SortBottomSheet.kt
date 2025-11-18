@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.aaditx23.taskman.presentation.tasklist.SortBy
+import org.aaditx23.taskman.presentation.screens.tasklist.SortBy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

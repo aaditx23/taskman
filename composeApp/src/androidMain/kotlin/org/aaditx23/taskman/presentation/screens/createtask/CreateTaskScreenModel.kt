@@ -1,4 +1,4 @@
-package org.aaditx23.taskman.presentation.createtask
+package org.aaditx23.taskman.presentation.screens.createtask
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
