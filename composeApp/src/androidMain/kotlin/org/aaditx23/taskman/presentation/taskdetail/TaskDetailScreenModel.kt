@@ -2,12 +2,11 @@ package org.aaditx23.taskman.presentation.taskdetail
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.aaditx23.taskman.data.MockData
+import org.aaditx23.taskman.AppDependencies
 import org.aaditx23.taskman.domain.model.Priority
 import org.aaditx23.taskman.domain.model.Status
 import org.aaditx23.taskman.domain.model.Task
@@ -22,6 +21,8 @@ class TaskDetailScreenModel(private val taskId: String) : ScreenModel {
     private val _state = MutableStateFlow(TaskDetailState())
     val state: StateFlow<TaskDetailState> = _state.asStateFlow()
 
+    private val repository = AppDependencies.repository
+
     init {
         loadTask()
     }
@@ -29,8 +30,7 @@ class TaskDetailScreenModel(private val taskId: String) : ScreenModel {
     private fun loadTask() {
         screenModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            delay(200)
-            val task = MockData.tasks.find { it.id == taskId }
+            val task = repository?.getTaskById(taskId)
             _state.value = _state.value.copy(
                 task = task,
                 isLoading = false
@@ -59,10 +59,7 @@ class TaskDetailScreenModel(private val taskId: String) : ScreenModel {
                 dueDate = dueDate
             )
 
-            val index = MockData.tasks.indexOfFirst { it.id == taskId }
-            if (index != -1) {
-                MockData.tasks[index] = updatedTask
-            }
+            repository?.updateTask(updatedTask)
 
             _state.value = _state.value.copy(
                 task = updatedTask,
@@ -72,7 +69,9 @@ class TaskDetailScreenModel(private val taskId: String) : ScreenModel {
     }
 
     fun deleteTask() {
-        MockData.tasks.removeAll { it.id == taskId }
+        screenModelScope.launch {
+            repository?.deleteTask(taskId)
+        }
     }
 }
 

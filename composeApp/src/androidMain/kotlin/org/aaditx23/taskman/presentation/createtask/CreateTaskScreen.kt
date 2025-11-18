@@ -2,8 +2,8 @@ package org.aaditx23.taskman.presentation.createtask
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,6 +14,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.aaditx23.taskman.domain.model.Priority
 import org.aaditx23.taskman.domain.model.Status
+import org.aaditx23.taskman.presentation.components.CreateTaskTopBar
+import org.aaditx23.taskman.presentation.components.TaskDatePickerDialog
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -200,7 +202,7 @@ class CreateTaskScreen : Screen {
         }
 
         if (showDatePicker) {
-            DatePickerDialog(
+            TaskDatePickerDialog(
                 initialDate = state.dueDate ?: System.currentTimeMillis(),
                 onDateSelected = { selectedDate ->
                     screenModel.onDueDateChange(selectedDate)
@@ -212,48 +214,4 @@ class CreateTaskScreen : Screen {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CreateTaskTopBar(onBackClick: () -> Unit) {
-    TopAppBar(
-        title = { Text("Create New Task") },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialog(
-    initialDate: Long,
-    onDateSelected: (Long) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialDate
-    )
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    datePickerState.selectedDateMillis?.let { onDateSelected(it) }
-                }
-            ) {
-                Text("OK")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    ) {
-        DatePicker(state = datePickerState)
-    }
-}
 

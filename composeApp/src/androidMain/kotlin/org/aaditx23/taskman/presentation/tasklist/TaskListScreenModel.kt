@@ -2,12 +2,9 @@ package org.aaditx23.taskman.presentation.tasklist
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import org.aaditx23.taskman.data.MockData
+import org.aaditx23.taskman.AppDependencies
 import org.aaditx23.taskman.domain.model.Priority
 import org.aaditx23.taskman.domain.model.Status
 import org.aaditx23.taskman.domain.model.Task
@@ -38,6 +35,8 @@ class TaskListScreenModel : ScreenModel {
     private val _state = MutableStateFlow(TaskListState())
     val state: StateFlow<TaskListState> = _state.asStateFlow()
 
+    private val repository = AppDependencies.repository
+
     init {
         loadTasks()
     }
@@ -45,14 +44,24 @@ class TaskListScreenModel : ScreenModel {
     fun loadTasks() {
         screenModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
-            // Simulate loading delay
-            delay(300)
-            val tasks = MockData.tasks
-            _state.value = _state.value.copy(
-                tasks = tasks,
-                filteredTasks = applyFiltersAndSort(tasks),
-                isLoading = false
-            )
+
+            repository?.let { repo ->
+                repo.getAllTasks()
+                    .collect { tasks ->
+                        _state.value = _state.value.copy(
+                            tasks = tasks,
+                            filteredTasks = applyFiltersAndSort(tasks),
+                            isLoading = false
+                        )
+                    }
+            } ?: run {
+                // Fallback if no repository (preview mode)
+                _state.value = _state.value.copy(
+                    tasks = emptyList(),
+                    filteredTasks = emptyList(),
+                    isLoading = false
+                )
+            }
         }
     }
 
@@ -97,7 +106,8 @@ class TaskListScreenModel : ScreenModel {
         // Apply search filter
         if (_state.value.searchQuery.isNotBlank()) {
             result = result.filter {
-                it.title.contains(_state.value.searchQuery, ignoreCase = true)
+                it.title.contains(_state.value.searchQuery, ignoreCase = true) ||
+                        it.description.contains(_state.value.searchQuery, ignoreCase = true)
             }
         }
 
@@ -129,8 +139,20 @@ class TaskListScreenModel : ScreenModel {
 
     fun deleteTask(taskId: String) {
         screenModelScope.launch {
-            MockData.tasks.removeAll { it.id == taskId }
-            loadTasks()
+            repository?.deleteTask(taskId)
+            // Tasks will automatically update via Flow
+        }
+    }
+
+    fun toggleTaskCompletion(taskId: String) {
+        screenModelScope.launch {
+            repository?.getTaskById(taskId)?.let { task ->
+                val updatedTask = task.copy(
+                    status = if (task.status == Status.DONE) Status.TODO else Status.DONE
+                )
+                repository?.updateTask(updatedTask)
+                // Tasks will automatically update via Flow
+            }
         }
     }
 }

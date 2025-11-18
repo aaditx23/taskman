@@ -6,7 +6,16 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    id("com.google.devtools.ksp")
+    id("androidx.room")
 }
+room{
+    schemaDirectory("$projectDir/schemas")
+}
+val roomVersion = "2.8.3"
+val voyagerVersion = "1.1.0-beta02"
+val sqliteVersion = "2.6.1"
+
 
 kotlin {
     androidTarget {
@@ -24,11 +33,19 @@ kotlin {
             isStatic = true
         }
     }
-    
+
+
+
+
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            // Room dependencies
+
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -41,12 +58,17 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
-            val voyagerVersion = "1.1.0-beta02"
+            implementation("androidx.room:room-runtime:${roomVersion}")
+            implementation("androidx.sqlite:sqlite-bundled:${sqliteVersion}")
+
+
 
             implementation("cafe.adriel.voyager:voyager-navigator:${voyagerVersion}")
             implementation("cafe.adriel.voyager:voyager-tab-navigator:${voyagerVersion}")
             implementation("cafe.adriel.voyager:voyager-transitions:${voyagerVersion}")
             implementation("cafe.adriel.voyager:voyager-screenmodel:${voyagerVersion}")
+
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -55,6 +77,8 @@ kotlin {
 }
 
 android {
+
+
     namespace = "org.aaditx23.taskman"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
@@ -79,9 +103,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+
+    // Room annotation processor
+    add("kspAndroid", "androidx.room:room-compiler:$roomVersion")
 }
 
