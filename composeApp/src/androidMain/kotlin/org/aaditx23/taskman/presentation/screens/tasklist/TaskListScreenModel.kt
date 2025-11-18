@@ -155,5 +155,17 @@ class TaskListScreenModel : ScreenModel {
             }
         }
     }
+
+    fun toggleTaskInProgress(taskId: String) {
+        screenModelScope.launch {
+            repository?.getTaskById(taskId)?.let { task ->
+                val updatedTask = task.copy(
+                    status = if (task.status == Status.IN_PROGRESS) Status.TODO else Status.IN_PROGRESS
+                )
+                repository?.updateTask(updatedTask)
+                // Tasks will automatically update via Flow
+            }
+        }
+    }
 }
 

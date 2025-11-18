@@ -81,6 +81,7 @@ class TaskListScreen : Screen {
                                 task = task,
                                 onClick = { navigator.push(TaskDetailScreen(task.id)) },
                                 onToggleComplete = { screenModel.toggleTaskCompletion(task.id) },
+                                onToggleInProgress = { screenModel.toggleTaskInProgress(task.id) },
                                 onDelete = { screenModel.deleteTask(task.id) }
                             )
                         }

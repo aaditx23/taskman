@@ -74,7 +74,7 @@ data class TaskDetailScreen(val taskId: String) : Screen {
                 AlertDialog(
                     onDismissRequest = { showDeleteDialog = false },
                     title = { Text("Delete Task") },
-                    text = { Text("Are you sure you want to delete this task?") },
+                    text = { Text("Are you sure you want to delete: ${task.title}?") },
                     confirmButton = {
                         TextButton(
                             onClick = {
